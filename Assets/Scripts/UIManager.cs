@@ -1,65 +1,58 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private Text TimerText;
-    [SerializeField] private Text InfoText;
-    [SerializeField] private Text FeedbackText;
+    [SerializeField] private GameObject ESCButton;
+    [SerializeField] private Button WinPanel;
+    [SerializeField] private Button LosePanel;
 
     private const string _infoText = "Press 'ESC' For Menu";
-    private const string _winText = "You WIN";
-    private const string _loseText = "Time's Up !";
-    private string LastText;
     private string LastTimer;
 
     internal void ResetUI()
     {
-        LastText = string.Empty;
-        LastTimer = string.Empty;
-        InfoText.text = string.Empty;
-        FeedbackText.text = string.Empty;
+        LastTimer = "00:00";
+        WinPanel.gameObject.SetActive(false);
+        LosePanel.gameObject.SetActive(false);
+        ESCButton.SetActive(false);
         TimerText.text = string.Empty;
     }
 
     internal void PauseUI()
     {
-        InfoText.text = string.Empty;
-        LastText = FeedbackText.text;
+        ESCButton.SetActive(false);
         LastTimer = TimerText.text;
         TimerText.text = string.Empty;
-        FeedbackText.text = string.Empty;
     }
 
     internal void UnPauseUI()
     {
-        InfoText.text = _infoText;
+        ESCButton.SetActive(true);
         TimerText.text = LastTimer;
-        FeedbackText.text = LastText;
     }
 
     internal void SetTimerUI(int seconds)
     {
-        TimerText.text = seconds.ToString();
+        TimerText.text = "00:" + seconds.ToString("D2");
     }
 
     internal void WinUI()
     {
-        FeedbackText.text = _winText;
+        WinPanel.gameObject.SetActive(true);
         TimerText.text = string.Empty;
     }
 
     internal void LoseUI()
     {
-        FeedbackText.text = _loseText;
+        LosePanel.gameObject.SetActive(true);
         TimerText.text = string.Empty;
     }
 
     internal void NewGameUI()
     {
         ResetUI();
-        InfoText.text = _infoText;
+        ESCButton.SetActive(true);
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -60,21 +58,27 @@ public class GameManager : MonoBehaviour
     {
         if (!paused && Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!Music.isPlaying)
-            {
-                Music.UnPause();
-            }
-            if (!gameOver)
-            {
-                _MenuManager.ToggleResume(true);
-            }
-            paused = !paused;
-            ToggleMenu();
+            OnESC();
         }
         if (!paused && !gameOver)
         {
             UpdateTimer();
         }
+    }
+
+    public void OnESC()
+    {
+        _UIManager.ResetUI();
+        if (!Music.isPlaying)
+        {
+            Music.UnPause();
+        }
+        if (!gameOver)
+        {
+            _MenuManager.ToggleResume(true);
+        }
+        paused = !paused;
+        ToggleMenu();
     }
 
     private void ToggleMenu()
@@ -120,6 +124,10 @@ public class GameManager : MonoBehaviour
 
     private void UpdateTimer()
     {
+        if (gameStats.timer == -99)
+        {
+            return;
+        }
         gameStats.timer -= Time.deltaTime;
         int seconds = Convert.ToInt32(gameStats.timer % 60);
         _UIManager.SetTimerUI(seconds);
@@ -157,7 +165,7 @@ public class GameManager : MonoBehaviour
         }
         _first = null;
         _second = null;
- 
+
         paused = false;
     }
 
@@ -175,7 +183,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < CardTypes.Length; i++)
         {
             gameStats.AllCards[i] = i;
-            gameStats.AllCards[i+CardTypes.Length] = i;
+            gameStats.AllCards[i + CardTypes.Length] = i;
         }
         gameStats.AllCards = gameStats.AllCards.Shuffle();
     }
@@ -210,7 +218,7 @@ public class GameManager : MonoBehaviour
             {
                 _second = card;
                 if (_first.CardFace.sprite == _second.CardFace.sprite)
-                {   
+                {
                     StartCoroutine(Match(true));
                     MatchAudio.PlayDelayed(CardDelay);
                     gameStats.CardsLeft -= 2;
@@ -239,7 +247,7 @@ public class GameManager : MonoBehaviour
         paused = !paused;
         ToggleMenu();
     }
-    public void NewGameBtn()
+    public void NewGameBtn(bool timer)
     {
         gameOver = false;
         CleanCards();
@@ -249,7 +257,14 @@ public class GameManager : MonoBehaviour
         ToggleMenu();
         GetAllCards();
         gameStats.CardsLeft = CardTypes.Length * 2;
-        gameStats.timer = 30f;
+        if (timer)
+        {
+            gameStats.timer = 3;
+        }
+        else
+        {
+            gameStats.timer = -99;
+        }
         AddAllCards();
         ResumeBtn();
     }
