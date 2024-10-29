@@ -259,7 +259,7 @@ public class GameManager : MonoBehaviour
         gameStats.CardsLeft = CardTypes.Length * 2;
         if (timer)
         {
-            gameStats.timer = 3;
+            gameStats.timer = 30;
         }
         else
         {
